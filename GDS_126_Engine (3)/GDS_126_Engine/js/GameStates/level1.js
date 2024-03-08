@@ -2,7 +2,7 @@
 /*------------Use this if you want to implement States---------------*/
 var gravity = 1;
 var friction = {x:.85,y:.97}
-
+var walking = false;
 var stage = new GameObject({width:canvas.width, height:canvas.height});
 
 //A level object when it is moved other objects move with it.
@@ -14,11 +14,11 @@ wiz.force=1
 
 //The ground
 var ground = new GameObject({width:canvas.width*10, x:canvas.width*10/2-200,height:64,y:canvas.height-32, color:"green", world:level})
-ground.img.src=`images/ground.png`
+ground.img.src=`images/streetground.png`
 
 //A platform
 var plat = new GameObject({width:256, height:64,y:canvas.height-200, color:"green", world:level})
-
+plat.img.src=`images/hoverboard.png`
 
 
 var leftBorder = new GameObject({width:50, height:canvas.height, world:level, x:0})
@@ -80,20 +80,26 @@ bg.img.src=`images/bgfull.png`
 
 var bullets=[]
 var canShoot=true;
-var shotTimer = 0;
-var shotDelay = 21;
-var currentBullet = 0;
+var shotTimer = 20;
+var shotDelay = 20;
+var currentBullet = 1;
 
 for(let i=0; i<100; i++)
 {
-	bullets[i] = new GameObject({width:64, height:64})
-	//bullets[i].img.src="images/mrt.jpg"
-	bullets[i].makeSprite(playerData)
-	bullets[i].y=-10000
-	bullets[i].changeState(`walk`)
+	 bullets[i] = new GameObject({width:34, height:34})
+	// bullets[i].img.src="images/mrt.jpg"
+	 bullets[i].makeSprite(BulletData)
+	 bullets[i].y=-10000
+	 bullets[i].changeState(`idle`)
+
+	// bullets[i] = new GameObject({width:64, height:64})
+	// //bullets[i].img.src="images/BlasterBullet.png"
+	// bullets[i].makeSprite(BulletData)
+	// bullets[i].y=-10000
+	// bullets[i].changeState(`shoot`)
 }
 
-//console.log(bullets)
+console.log(bullets)
 
 /*------------------^^BULLET STUFF^^----------------------*/
 
@@ -102,6 +108,8 @@ gameStates[`level1`] = function()
 	if(!keys[`W`] && !keys[`S`] && !keys[`D`] && !keys[`A`] && !keys[` `] && canShoot && wiz.canJump)
 	{
 		wiz.changeState(`idle`)
+		if(walking) sounds.stop('walk')
+		walking=false;
 	}
 	
 	
@@ -109,6 +117,8 @@ gameStates[`level1`] = function()
 	{
 		wiz.top={x:0,y:0};
 		wiz.changeState(`crouch`)
+		if(walking) sounds.stop('walk')
+		walking=false;
 	}
 	else
 	{
@@ -122,6 +132,11 @@ gameStates[`level1`] = function()
 		{
 			if(wiz.canJump)wiz.changeState(`walk`)
 			wiz.vx += wiz.force
+			if(walking==false && wiz.canJump)
+			{
+				walking=true;
+				sounds.play('walk', 0, true)
+			}
 			
 		}
 		
@@ -133,6 +148,12 @@ gameStates[`level1`] = function()
 		{
 			if(wiz.canJump)wiz.changeState(`walk`)
 			wiz.vx += -wiz.force
+			if(walking==false && wiz.canJump)
+			{
+				walking=true;
+				sounds.play('walk', 0, true)
+			}
+	
 		}
 		
 	}
@@ -141,7 +162,12 @@ gameStates[`level1`] = function()
 		wiz.canJump = false;
 		wiz.vy = wiz.jumpHeight;
 		wiz.changeState(`jump`)
-		sounds.play(`Jump`,2)
+		sounds.play(`jump`)
+		if(walking) sounds.stop('walk')
+			{
+				walking=false
+			}
+		
 	}
 	shotTimer--;
 	if(shotTimer <=0)
@@ -162,12 +188,14 @@ gameStates[`level1`] = function()
 			//console.log(`Boom`)
 
 			bullets[currentBullet].vx = 5*wiz.dir;
+			//bullets[currentBullet].vy = 1;
+
 			bullets[currentBullet].world = level;
-			bullets[currentBullet].x = wiz.x-level.x + (wiz.dir * 96) ;
-			bullets[currentBullet].y = wiz.y + 20;
+			bullets[currentBullet].x = wiz.x-level.x + (wiz.dir * 56) ;
+			bullets[currentBullet].y = wiz.y + 0;
 			bullets[currentBullet].dir = wiz.dir;
 			
-			sounds.play(`splode`,1)
+			sounds.play(`shoot`,0)
 
 			currentBullet++;
 			if(currentBullet>=bullets.length)
@@ -258,9 +286,11 @@ gameStates[`level1`] = function()
 	
 	//Sets up pattern for the ground
 	var groundPattern = context.createPattern(ground.img, `repeat`);
+	//Sets up pattern for the platform
+	var platformPattern = context.createPattern(plat.img, `repeat`);
 	//Applies pattern to ground and platform
 	ground.color = groundPattern
-	plat.color = groundPattern
+	plat.color = platformPattern
 
 	//Sets up pattern for the sky
 	var skyPattern = context.createPattern(sky.img, `repeat`);
@@ -299,7 +329,7 @@ gameStates[`level1`] = function()
 	//Moves, checks collision and renders projectiles.
 	for(let i=0; i<bullets.length; i++)
 	{
-		if(bullets[i].overlap(stage)) bullets[i].vy+=1;
+		//if(bullets[i].overlap(stage)) bullets[i].vy+=1;
 		bullets[i].move()
 		bullets[i].play(function(){return}).drawSprite()
 		//bullets[i].angle+=10

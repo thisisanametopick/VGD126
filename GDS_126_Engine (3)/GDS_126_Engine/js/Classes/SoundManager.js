@@ -5,8 +5,21 @@ class SoundManager
         for(let i=0; i<_soundNodes.length; i++)
         {
              this[_soundNodes[i].getAttribute(`name`)]=_soundNodes[i]
+            }
+    }
+    stop(_sound)
+    {
+        try
+        {
+            this[_sound].pause()
+            this[_sound].currentTime=0
+        }
+        catch
+        {
+            throw new Error('Sound is not loaded')
         }
     }
+
     play(_sound, _start=0, _loop=false)
     {
         try

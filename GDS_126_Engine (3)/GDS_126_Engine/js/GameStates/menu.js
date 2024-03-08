@@ -10,7 +10,7 @@ console.log(startButton.collisionPoints.right)
 
 
 var menuBackground = new GameObject();
-menuBackground.img.src = "images/mrt.jpg"
+menuBackground.img.src = "images/cyberpunk background.jpg"
 menuBackground.width=canvas.width
 menuBackground.height=canvas.height
 
@@ -26,16 +26,19 @@ gameStates[`menu`] =function(){
 		}
 
 		//Hover Effect Graffic
-		startButton.color = `blue`
+		//startButton.color = `blue`
+		startButton.img.src="images/Startbutton2.png"
 	}
 	else
 	{
 		//Default Button Graphic
-		startButton.color = `purple`
+		//startButton.color = `purple`
+		startButton.img.src="images/Startbutton1.png"
 	}
 	
 	menuBackground.drawStaticImage();
-	startButton.render()
+	startButton.drawStaticImage()
+	//sounds.play(`music`,1)
 }
 	
 	
