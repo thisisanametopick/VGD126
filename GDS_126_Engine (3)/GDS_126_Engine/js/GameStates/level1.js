@@ -333,12 +333,13 @@ gameStates[`level1`] = function()
 		bullets[i].move()
 		bullets[i].play(function(){return}).drawSprite()
 		//bullets[i].angle+=10
-		while(g1.collide(bullets[i].bottom) && bullets[i].vy>=0)
+		
+		if(g1.collide(bullets[i].right)&& bullets[i].currentState == "idle")
 		{
-			
-			bullets[i].vy=0;
-			bullets[i].y--;
-			
+			console.log("bullets hit wall")
+			bullets[i].changeState('explode')
+			bullets[i].vx=0;
+			console.log(`state: ${bullets[i].currentState}`)
 		}
 	}
 

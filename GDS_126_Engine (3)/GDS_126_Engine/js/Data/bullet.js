@@ -19,7 +19,7 @@ Properties:
 
 var BulletData ={
 	info:{
-		src:`images/BlasterBullet.png`
+		src:`images/plasma explode.png`
 	},
 	states:{
 		//The shoot animation 
@@ -32,6 +32,21 @@ var BulletData ={
 				{width:128, height:128, startX:0, startY:0},
 				{width:128, height:128, startX:128, startY:0},
 				{width:128, height:128, startX:256, startY:0}
+				
+			]
+		},
+		explode: 
+		{
+			fps:2,
+			cycle:false,
+			frames:
+			[
+				{width:128, height:128, startX:0, startY:128},
+				{width:128, height:128, startX:128, startY:128},
+				{width:128, height:128, startX:256, startY:128},
+				{width:128, height:128, startX:384, startY:128},
+				{width:128, height:128, startX:512, startY:128},
+				{width:1, height:1, startX:0, startY:0},
 				
 			]
 		},
