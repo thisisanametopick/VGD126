@@ -10,7 +10,7 @@ console.log(startButton.collisionPoints.right)
 
 
 var menuBackground = new GameObject();
-menuBackground.img.src = "images/cyberpunk background.jpg"
+menuBackground.img.src = "images/Main menu.png"
 menuBackground.width=canvas.width
 menuBackground.height=canvas.height
 
